@@ -1,10 +1,3 @@
-<!-- ▸ Compact dashboard – 3 sections : Pricing / Key Commercial Terms / Macro ◂ -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
-<!-- NEW: Boxplot plugin -->
-<script src="https://cdn.jsdelivr.net/npm/@sgratzl/chartjs-chart-boxplot@3"></script>
-
-<script>
   /* ───────────────────────────── 1. STYLE ───────────────────────────── */
   const PAL = {
     brand: "#005450",
@@ -1840,4 +1833,3 @@
     const grid = makeSection(sec.title);
     sec.charts.forEach((c) => buildChart(grid, c));
   });
-</script>
