@@ -144,7 +144,7 @@
 
   const sections = [
     {
-      title: "Pricing",
+      title: "Pricing ing ing ing",
       charts: [
         /* New sub-heading */
         { type: "subheading", text: "Median By Credit Type" },
