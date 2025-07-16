@@ -657,6 +657,7 @@ const sections = [
       { type: "subheading", text: "Spread By Credit Type" },
 
       {
+        /* ─── Spot §48 ITC histogram ────────────────────────────── */
         title: "Spot §48 ITC Transaction Count by Gross Price",
         subtitle:
           "Explore relative pricing frequency for §48 ITC deals in this chart that shows percentages of deals sold at each cent value from 70 to 98 cents. Our §48 ITC pricing is exclusive of residential solar and biogas/RNG, which we track separately.",
@@ -669,7 +670,7 @@ const sections = [
           "$0.700 – $0.790",
           "$0.791 – $0.849",
           "$0.850 – $0.879",
-          "$0.880 – $0.889",
+          "$0.880 – $0.889", //  ← the bar with 0.7 %
           "$0.890 – $0.899",
           "$0.900 – $0.909",
           "$0.910 – $0.919",
@@ -692,8 +693,8 @@ const sections = [
             data: [
               0.021, // 2.1 %
               0.014, // 1.4 %
-              0.062, // 6.2 %  ← corrected
-              0.007, // 0.7 %
+              0.062, // 6.2 %
+              0.007, // 0.7 %  ← special bar (index 3)
               0.014, // 1.4 %
               0.098, // 9.8 %
               0.161, // 16.1 %
@@ -707,6 +708,16 @@ const sections = [
               0.0, // 0 %
               0.0, // 0 %
             ],
+
+            /* per-bar label styling */
+            datalabels: {
+              /* black text & above-bar position ONLY for dataIndex 3 */
+              color: (ctx) => (ctx.dataIndex === 3 ? "#000" : "#FFF"),
+              anchor: (ctx) => (ctx.dataIndex === 3 ? "end" : "center"),
+              align: (ctx) => (ctx.dataIndex === 3 ? "top" : "center"),
+              offset: (ctx) => (ctx.dataIndex === 3 ? 6 : 0),
+              formatter: (v) => (v * 100).toFixed(1) + "%", // 0.7 %, 2.1 % …
+            },
           },
         ],
 
@@ -719,10 +730,10 @@ const sections = [
         options: {
           scales: {
             x: {
-              ticks: { font: { family: FONT_FAM, size: 6 } }, // bucket labels
+              ticks: { font: { family: FONT_FAM, size: 6 } },
             },
             y: {
-              ticks: { font: { family: FONT_FAM, size: 6 } }, // % scale at the left
+              ticks: { font: { family: FONT_FAM, size: 6 } },
             },
           },
         },
