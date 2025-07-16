@@ -707,6 +707,15 @@ const sections = [
               0.0, // 0 %
               0.0, // 0 %
             ],
+            datalabels: {
+              anchor: (ctx) => (ctx.dataIndex === 3 ? "end" : "center"),
+              align: (ctx) => (ctx.dataIndex === 3 ? "top" : "center"),
+              offset: (ctx) => (ctx.dataIndex === 3 ? -5 : 0),
+              color: (ctx) =>
+                ctx.dataIndex === 3 ? "#000" : ctx.raw === 0 ? "#000" : "#FFF",
+              formatter: (v) => (v * 100).toFixed(1) + "%",
+              font: { family: FONT_FAM, weight: 600, size: 6 },
+            },
           },
         ],
 
@@ -717,17 +726,6 @@ const sections = [
         },
 
         options: {
-          plugins: {
-            datalabels: {
-              /* put every label where you have it already … */
-              anchor: (ctx) => (ctx.raw === 0 ? "end" : "center"),
-              align: (ctx) => (ctx.raw === 0 ? "top" : "center"),
-              offset: (ctx) => (ctx.raw === 0 ? -5 : 0), // −5 px = 5 px upward
-
-              formatter: (v) => (v * 100).toFixed(1) + "%",
-              font: { family: FONT_FAM, weight: 600, size: 6 },
-            },
-          },
           scales: {
             x: {
               ticks: { font: { family: FONT_FAM, size: 6 } }, // bucket labels
@@ -1614,7 +1612,6 @@ function buildChart(grid, cfg) {
   const isLine = cfg.type === "line";
   const isBox = cfg.type === "boxplot";
   const isPWAChart = /PWA Compliance/i.test(cfg.title);
-  
 
   // for bar charts honour the `stacked` flag that the caller
   // may have provided (default = true when nothing is specified)
