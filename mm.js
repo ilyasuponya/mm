@@ -707,15 +707,6 @@ const sections = [
               0.0, // 0 %
               0.0, // 0 %
             ],
-            datalabels: {
-              anchor: (ctx) => (ctx.dataIndex === 3 ? "end" : "center"),
-              align: (ctx) => (ctx.dataIndex === 3 ? "top" : "center"),
-              offset: (ctx) => (ctx.dataIndex === 3 ? -5 : 0),
-              color: (ctx) =>
-                ctx.dataIndex === 3 ? "#000" : ctx.raw === 0 ? "#000" : "#FFF",
-              formatter: (v) => (v * 100).toFixed(1) + "%",
-              font: { family: FONT_FAM, weight: 600, size: 12 },
-            },
           },
         ],
 
@@ -1076,7 +1067,7 @@ const sections = [
             fill: { target: 0 }, // ← shade up to dataset 0
           },
 
-          /* 2 – blue line : exclusivity period */
+          /* 2 – blue line : Exclusivity Period  ───────────────────────────── */
           {
             label: "Exclusivity Period",
             order: 2,
@@ -1085,10 +1076,20 @@ const sections = [
             pointRadius: 4,
             tension: 0,
             fill: false,
-            datalabels: { anchor: "end", align: "top", offset: 10 },
+            datalabels: {
+              anchor: "end",
+              // put larger number on top, smaller underneath
+              align: (ctx) => {
+                const i = ctx.dataIndex;
+                const exclusivity = ctx.dataset.data[i]; // this dataset
+                const duration = ctx.chart.data.datasets[3].data[i]; // red dataset
+                return exclusivity >= duration ? "top" : "bottom";
+              },
+              offset: 10,
+            },
           },
 
-          /* 3 – red line : deal duration */
+          /* 3 – red line : Deal Duration  ─────────────────────────────────── */
           {
             label: "Deal Duration",
             order: 2,
@@ -1097,7 +1098,17 @@ const sections = [
             pointRadius: 4,
             tension: 0,
             fill: false,
-            datalabels: { anchor: "end", align: "bottom", offset: 10 },
+            datalabels: {
+              anchor: "end",
+              // put larger number on top, smaller underneath
+              align: (ctx) => {
+                const i = ctx.dataIndex;
+                const duration = ctx.dataset.data[i]; // this dataset
+                const exclusivity = ctx.chart.data.datasets[2].data[i]; // blue dataset
+                return duration > exclusivity ? "top" : "bottom";
+              },
+              offset: 10,
+            },
           },
         ],
 
