@@ -1751,24 +1751,27 @@
               /* every other chart keeps its labels */
               return true;
             },
-            anchor: (ctx) => (isBar ? "center" : "end"),
-            align: (ctx) => (isBar ? "center" : "top"),
-            offset: 20,
-            color: (ctx) => {
-              if (isBar) {
-                // numeric value of the current bar
-                const v =
-                  ctx.raw ?? ctx.parsed ?? ctx.dataset.data[ctx.dataIndex];
-
-                // 0-percent → black    everything else → white
-                return v === 0 ? "#000" : "#FFF";
-              }
-
-              // line / other charts keep the old rule
-              const c = ctx.dataset.borderColor || ctx.dataset.backgroundColor;
-              return (Array.isArray(c) ? c[ctx.dataIndex] : c) || "#000";
-            },
-            font: { family: FONT_FAM, weight: "600", size: 12 },
+            anchor : ctx => {
+      if (!isBar) return 'end';
+      const v = ctx.raw ?? 0;
+      return (v === 0 || v === 0.007) ? 'end' : 'center';
+    },
+            align : ctx => {
+      if (!isBar) return 'top';
+      const v = ctx.raw ?? 0;
+      return (v === 0 || v === 0.007) ? 'top' : 'center';
+    },
+            offset : ctx => {
+      if (!isBar) return 20;
+      const v = ctx.raw ?? 0;
+      return (v === 0 || v === 0.007) ? -5 : 0;   // little push upward
+    },
+            color : ctx => {
+      const v = ctx.raw ?? 0;
+      /* black for 0 % and 0.7 %, white text everywhere else */
+      return (v === 0 || v === 0.007) ? '#000' : '#FFF';
+    },
+            font  : { family: FONT_FAM, weight: 600, size: 9 },
             formatter(v) {
               /* suppress the text for a 0-value on PWA charts (safety net) */
               if (isPWAChart && (v == null || v === 0)) return "";
