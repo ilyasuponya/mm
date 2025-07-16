@@ -1756,7 +1756,7 @@ function buildChart(grid, cfg) {
     display: "flex",
     flexDirection: "column",
     justifyContent: "flex-start",
-    gap: "12px", // nice, consistent spacing
+    gap: "0px",
     fontFamily: FONT_FAM,
     boxShadow: "0 1px 8px 0 rgba(0,0,0,0.02)",
     border: `1px solid ${PAL.sectionBorder}`,
