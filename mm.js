@@ -714,7 +714,7 @@ const sections = [
               color: (ctx) =>
                 ctx.dataIndex === 3 ? "#000" : ctx.raw === 0 ? "#000" : "#FFF",
               formatter: (v) => (v * 100).toFixed(1) + "%",
-              font: { family: FONT_FAM, weight: 600, size: 6 },
+              font: { family: FONT_FAM, weight: 600, size: 12 },
             },
           },
         ],
