@@ -670,7 +670,7 @@ const sections = [
           "$0.700 – $0.790",
           "$0.791 – $0.849",
           "$0.850 – $0.879",
-          "$0.880 – $0.889", //  ← the bar with 0.7 %
+          "$0.880 – $0.889", //  ← 0.7 % bar (index 3)
           "$0.890 – $0.899",
           "$0.900 – $0.909",
           "$0.910 – $0.919",
@@ -685,38 +685,41 @@ const sections = [
           "$1.000",
         ],
 
-        /* single-series histogram */
         datasets: [
           {
             label: "Share of transactions",
             color: BRAND_PRIMARY,
             data: [
-              0.021, // 2.1 %
-              0.014, // 1.4 %
-              0.062, // 6.2 %
-              0.007, // 0.7 %  ← special bar (index 3)
-              0.014, // 1.4 %
-              0.098, // 9.8 %
-              0.161, // 16.1 %
-              0.266, // 26.6 %
-              0.168, // 16.8 %
-              0.133, // 13.3 %
-              0.035, // 3.5 %
-              0.021, // 2.1 %
-              0.0, // 0 %
-              0.0, // 0 %
-              0.0, // 0 %
-              0.0, // 0 %
+              0.021, 0.014, 0.062, 0.007, 0.014, 0.098, 0.161, 0.266, 0.168,
+              0.133, 0.035, 0.021, 0.0, 0.0, 0.0, 0.0,
             ],
 
-            /* per-bar label styling */
+            /* ── individual label rules ─────────────────────────── */
             datalabels: {
-              /* black text & above-bar position ONLY for dataIndex 3 */
-              color: (ctx) => (ctx.dataIndex === 3 ? "#000" : "#FFF"),
-              anchor: (ctx) => (ctx.dataIndex === 3 ? "end" : "center"),
-              align: (ctx) => (ctx.dataIndex === 3 ? "top" : "center"),
-              offset: (ctx) => (ctx.dataIndex === 3 ? 6 : 0),
-              formatter: (v) => (v * 100).toFixed(1) + "%", // 0.7 %, 2.1 % …
+              clamp: true, // always draw, even outside
+              display: true, // show all labels
+              color: (ctx) => {
+                const i = ctx.dataIndex;
+                const v = ctx.dataset.data[i];
+                return i === 3 || v === 0 ? "#000" : "#FFF";
+              },
+              anchor: (ctx) => {
+                const i = ctx.dataIndex;
+                const v = ctx.dataset.data[i];
+                return i === 3 || v === 0 ? "end" : "center";
+              },
+              align: (ctx) => {
+                const i = ctx.dataIndex;
+                const v = ctx.dataset.data[i];
+                return i === 3 || v === 0 ? "top" : "center";
+              },
+              offset: (ctx) => {
+                const i = ctx.dataIndex;
+                const v = ctx.dataset.data[i];
+                return i === 3 || v === 0 ? 6 : 0; // lift label 6 px
+              },
+              formatter: (v) => (v * 100).toFixed(1) + "%", // e.g. “0.7 %”
+              font: { family: FONT_FAM, weight: 600, size: 10 },
             },
           },
         ],
@@ -739,6 +742,7 @@ const sections = [
         },
       },
       {
+        /* ─── Spot §45 PTC histogram ────────────────────────────── */
         title: "Spot §45 PTC Transaction Count by Gross Price",
         subtitle:
           "Explore relative pricing frequency for §45 PTC deals in this chart that shows percentages of deals sold at each cent value from 70 to 98 cents. §45 PTCs are not subject to §50 recapture and are often structured with quarterly payments in arrears.",
@@ -766,14 +770,13 @@ const sections = [
           "$1.000",
         ],
 
-        /* single-series histogram */
         datasets: [
           {
             label: "Share of transactions",
             color: BRAND_PRIMARY,
             data: [
-              0.0, // 0.0 %  ← corrected
-              0.0, // 0.0 %  ← corrected
+              0.0, // 0.0 %
+              0.0, // 0.0 %
               0.0, // 0.0 %
               0.0, // 0.0 %
               0.0, // 0.0 %
@@ -789,6 +792,21 @@ const sections = [
               0.0, // 0.0 %
               0.0, // 0.0 %
             ],
+
+            /* ── data-label styling ───────────────────────────── */
+            datalabels: {
+              clamp: true, // always draw labels
+              display: true,
+              color: (ctx) =>
+                ctx.dataset.data[ctx.dataIndex] === 0 ? "#000" : "#FFF",
+              anchor: (ctx) =>
+                ctx.dataset.data[ctx.dataIndex] === 0 ? "end" : "center",
+              align: (ctx) =>
+                ctx.dataset.data[ctx.dataIndex] === 0 ? "top" : "center",
+              offset: (ctx) => (ctx.dataset.data[ctx.dataIndex] === 0 ? 6 : 0),
+              formatter: (v) => (v * 100).toFixed(1) + "%", // e.g. “28.3 %”
+              font: { family: FONT_FAM, weight: 600, size: 10 },
+            },
           },
         ],
 
@@ -799,22 +817,18 @@ const sections = [
         },
 
         options: {
-          plugins: {
-            datalabels: {
-              font: { family: FONT_FAM, weight: 600, size: 6 }, // numbers on the bars
-            },
-          },
           scales: {
             x: {
-              ticks: { font: { family: FONT_FAM, size: 6 } }, // bucket labels
+              ticks: { font: { family: FONT_FAM, size: 6 } },
             },
             y: {
-              ticks: { font: { family: FONT_FAM, size: 6 } }, // % scale at the left
+              ticks: { font: { family: FONT_FAM, size: 6 } },
             },
           },
         },
       },
       {
+        /* ─── Spot §45X AMPC histogram ───────────────────────────── */
         title: "Spot §45X AMPC Transaction Count by Gross Price",
         subtitle:
           "Explore relative pricing frequency for §45X AMPC deals in this chart that shows percentages of deals sold at each cent value from 70 to 98 cents.",
@@ -822,6 +836,7 @@ const sections = [
         stacked: false,
         showLegend: false,
 
+        /* x-axis buckets */
         labels: [
           "$0.700 – $0.790",
           "$0.791 – $0.849",
@@ -848,7 +863,7 @@ const sections = [
             data: [
               0.0, // 0.0 %
               0.0, // 0.0 %
-              0.04, // 4.0 %  ← corrected
+              0.04, // 4.0 %
               0.021, // 2.1 %
               0.0, // 0.0 %
               0.042, // 4.2 %
@@ -863,27 +878,34 @@ const sections = [
               0.0, // 0.0 %
               0.0, // 0.0 %
             ],
+
+            /* ── data-label styling ─────────────────────────────── */
+            datalabels: {
+              clamp: true, // draw even if outside plot-area
+              display: true,
+              color: (ctx) =>
+                ctx.dataset.data[ctx.dataIndex] === 0 ? "#000" : "#FFF",
+              anchor: (ctx) =>
+                ctx.dataset.data[ctx.dataIndex] === 0 ? "end" : "center",
+              align: (ctx) =>
+                ctx.dataset.data[ctx.dataIndex] === 0 ? "top" : "center",
+              offset: (ctx) => (ctx.dataset.data[ctx.dataIndex] === 0 ? 6 : 0),
+              formatter: (v) => (v * 100).toFixed(1) + "%", // e.g. “31.3 %”
+              font: { family: FONT_FAM, weight: 600, size: 10 },
+            },
           },
         ],
 
+        /* y-axis formatting */
         y: {
           ticks: [0, 0.1, 0.2, 0.3, 0.4],
           fmt: (v) => (v * 100).toFixed(1) + "%",
         },
 
         options: {
-          plugins: {
-            datalabels: {
-              font: { family: FONT_FAM, weight: 600, size: 6 }, // numbers on the bars
-            },
-          },
           scales: {
-            x: {
-              ticks: { font: { family: FONT_FAM, size: 6 } }, // bucket labels
-            },
-            y: {
-              ticks: { font: { family: FONT_FAM, size: 6 } }, // % scale at the left
-            },
+            x: { ticks: { font: { family: FONT_FAM, size: 6 } } },
+            y: { ticks: { font: { family: FONT_FAM, size: 6 } } },
           },
         },
       },
@@ -946,31 +968,68 @@ const sections = [
       { type: "subheading", text: "Investment-Grade Indemnity" },
       /* ─── Premium paid for credits with investment-grade indemnity (2024) ─── */
       {
+        /* ─── Investment-grade indemnity premium ─────────────────── */
         title: "Price Premium For 2024 Credits With Investment-Grade Indemnity",
         subtitle:
           "Tax credits sold by investment grade (“IG”) sellers generally trade at a premium relative to unrated credits that carry tax credit insurance. This data is based on a survey of buyers we took in January of 2025.",
         type: "bar",
-        stacked: false, //  ← grouped, not stacked
+        stacked: false, // grouped bars
         showLegend: true,
 
         labels: ["No premium", "$0.00 – $0.01", "$0.01 – $0.02", ">$0.02"],
 
         datasets: [
+          /* ── §48 ITCs ─────────────────────────────────────────── */
           {
             label: "§48 ITCs",
             color: BRAND_PRIMARY,
             data: [0.09, 0.19, 0.6, 0.12],
+
+            datalabels: {
+              clamp: true,
+              display: true,
+              color: "#FFF", // no zero values here
+              anchor: "center",
+              align: "center",
+              offset: 0,
+              formatter: (v) => (v * 100).toFixed(0) + "%", // e.g. “60 %”
+              font: { family: FONT_FAM, weight: 600, size: 10 },
+            },
           },
+
+          /* ── §45 PTCs & §45X AMPCs ────────────────────────────── */
           {
             label: "§45 PTCs & §45X AMPCs",
             color: BRAND_SECONDARY,
-            data: [0.09, 0.27, 0.64, 0.0],
+            data: [0.09, 0.27, 0.64, 0.0], // last bar is 0 %
+
+            datalabels: {
+              clamp: true,
+              display: true,
+              color: (ctx) =>
+                ctx.dataset.data[ctx.dataIndex] === 0 ? "#000" : "#FFF",
+              anchor: (ctx) =>
+                ctx.dataset.data[ctx.dataIndex] === 0 ? "end" : "center",
+              align: (ctx) =>
+                ctx.dataset.data[ctx.dataIndex] === 0 ? "top" : "center",
+              offset: (ctx) => (ctx.dataset.data[ctx.dataIndex] === 0 ? 6 : 0),
+              formatter: (v) => (v * 100).toFixed(0) + "%", // “0 %”, “64 %”, …
+              font: { family: FONT_FAM, weight: 600, size: 10 },
+            },
           },
         ],
 
+        /* y-axis formatting */
         y: {
           ticks: [0, 0.25, 0.5, 0.75, 1],
           fmt: (v) => (v * 100).toFixed(0) + "%",
+        },
+
+        options: {
+          scales: {
+            x: { ticks: { font: { family: FONT_FAM, size: 6 } } },
+            y: { ticks: { font: { family: FONT_FAM, size: 6 } } },
+          },
         },
       },
     ],
@@ -1172,12 +1231,13 @@ const sections = [
         },
       },
       {
+        /* ─── Demand: executed term sheets per closing quarter ──────────── */
         title:
           "Demand: Executed Term Sheet For Credits by Est. Closing Quarter",
         subtitle:
           "Transferable tax credits of a given “vintage” (2024, 2025, etc.) can be sold before, during, and after the year in which they are generated. This data highlights all 2024 vintage credit transactions by the quarter the term sheet was signed in.",
         type: "bar",
-        stacked: false, // single–series bars
+        stacked: false,
         showLegend: false,
 
         labels: [
@@ -1196,17 +1256,40 @@ const sections = [
           {
             label: "Signed term sheets",
             color: BRAND_PRIMARY,
-            // % of total term-sheet volume expected to close in each quarter
             data: [0.0, 0.0, 0.012, 0.07, 0.096, 0.303, 0.332, 0.099, 0.088],
+
+            /* ── data-label styling ─────────────────────────────────── */
+            datalabels: {
+              clamp: true, // draw even if outside
+              display: true,
+              color: (ctx) =>
+                ctx.dataset.data[ctx.dataIndex] === 0 ? "#000" : "#FFF",
+              anchor: (ctx) =>
+                ctx.dataset.data[ctx.dataIndex] === 0 ? "end" : "center",
+              align: (ctx) =>
+                ctx.dataset.data[ctx.dataIndex] === 0 ? "top" : "center",
+              offset: (ctx) => (ctx.dataset.data[ctx.dataIndex] === 0 ? 6 : 0),
+              formatter: (v) => (v * 100).toFixed(1) + "%", // “0.0 %”, “30.3 %”, …
+              font: { family: FONT_FAM, weight: 600, size: 10 },
+            },
           },
         ],
 
+        /* y-axis formatting */
         y: {
           ticks: [0, 0.1, 0.2, 0.3, 0.4],
           fmt: (v) => (v * 100).toFixed(1) + "%",
         },
+
+        options: {
+          scales: {
+            x: { ticks: { font: { family: FONT_FAM, size: 6 } } },
+            y: { ticks: { font: { family: FONT_FAM, size: 6 } } },
+          },
+        },
       },
       {
+        /* ─── Transaction count by seller technology ─────────────── */
         title: "Transaction Count by Seller Technology",
         subtitle:
           "Explore the renewable energy technology makeup of sellers in tax credit transfer transactions.",
@@ -1214,7 +1297,7 @@ const sections = [
         stacked: false,
         showLegend: false,
 
-        /* x-axis categories (order = highest → lowest share) */
+        /* x-axis categories (largest → smallest share) */
         labels: [
           "Onshore wind",
           "Component manufacturing",
@@ -1235,30 +1318,54 @@ const sections = [
           "Geothermal",
         ],
 
-        /* one-series vertical bar chart */
         datasets: [
           {
             label: "Share of transactions",
-            color: BRAND_PRIMARY, // primary brand colour
+            color: BRAND_PRIMARY,
             data: [
-              0.182, // Onshore wind
-              0.141, // Component manufacturing
-              0.124, // Solar (Utility)
-              0.124, // Battery storage
-              0.096, // Biogas (RNG)
-              0.096, // Solar (Community)
-              0.062, // Solar (Residential)
-              0.038, // Solar + wind
-              0.027, // Nuclear
-              0.027, // Solar + storage
-              0.024, // Critical minerals
-              0.014, // Fuel cell
-              0.014, // Solar (C&I)
-              0.014, // Combined heat and power
-              0.007, // CCUS
-              0.007, // EV charging
-              0.003, // Geothermal
+              0.182, // 18.2 %
+              0.141, // 14.1 %
+              0.124, // 12.4 %
+              0.124, // 12.4 %
+              0.096, // 9.6 %
+              0.096, // 9.6 %
+              0.062, // 6.2 %
+              0.038, // 3.8 %
+              0.027, // 2.7 %
+              0.027, // 2.7 %
+              0.024, // 2.4 %
+              0.014, // 1.4 %
+              0.014, // 1.4 %
+              0.014, // 1.4 %
+              0.007, // 0.7 %   ← index 14
+              0.007, // 0.7 %   ← index 15
+              0.003, // 0.3 %   ← index 16
             ],
+
+            /* ── label styling ─────────────────────────────────── */
+            datalabels: {
+              clamp: true,
+              display: true,
+              /* indices 14,15,16  → black / above-bar */
+              color: (ctx) => {
+                const i = ctx.dataIndex;
+                return i === 14 || i === 15 || i === 16 ? "#000" : "#FFF";
+              },
+              anchor: (ctx) => {
+                const i = ctx.dataIndex;
+                return i === 14 || i === 15 || i === 16 ? "end" : "center";
+              },
+              align: (ctx) => {
+                const i = ctx.dataIndex;
+                return i === 14 || i === 15 || i === 16 ? "top" : "center";
+              },
+              offset: (ctx) => {
+                const i = ctx.dataIndex;
+                return i === 14 || i === 15 || i === 16 ? 6 : 0;
+              },
+              formatter: (v) => (v * 100).toFixed(1) + "%", // e.g. “0.7 %”
+              font: { family: FONT_FAM, weight: 600, size: 10 },
+            },
           },
         ],
 
