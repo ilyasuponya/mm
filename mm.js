@@ -328,52 +328,62 @@ const sections = [
           fmt: (v) => "$" + v.toFixed(3),
         },
       },
-      /* ─── 45X AMpC (> $25 M) median price by vintage ─── */
-      {
-        title: "§45X AMPC  (>$25M) Median Gross Pricing by Vintage",
-        subtitle:
-          "See how median prices for each vintage of large §45X AMPC deals change throughout the year.",
-        type: "line",
-        showLegend: true,
-        note: "* Not enough data or expected transaction volume",
+      /* ─── 45X AMPC (> $25 M) median price by vintage ─── */
+/* ─── 45X AMPC (> $25M) median price by vintage ─── */
+{
+  title: "§45X AMPC  (>$25M) Median Gross Pricing by Vintage",
+  subtitle:
+    "See how median prices for each vintage of large §45X AMPC deals change throughout the year.",
+  type: "line",
+  showLegend: true,
+  note: "* Not enough data or expected transaction volume",
 
-        /* x-axis */
-        labels: [
-          "Current Q1",
-          "Current Q2",
-          "Current Q3",
-          "Current Q4",
-          "Following Q1",
-          "Following Q2*",
-        ],
+  /* x-axis */
+  labels: [
+    "Current Q1",
+    "Current Q2",
+    "Current Q3",
+    "Current Q4",
+    "Following Q1",
+    "Following Q2*",
+  ],
 
-        /* year-series : blue / red / yellow */
-        datasets: [
-          /* 2024 ---------------------------------------------------------- */
-          {
-            label: "2024",
-            color: BRAND_PRIMARY,
-            data: [0.94, 0.95, 0.945, 0.955, 0.953, null],
-          },
+  datasets: [
+    /* 2024 ---------------------------------------------------------- */
+    {
+      label: "2024",
+      color: BRAND_PRIMARY,
+      data: [0.94, 0.95, 0.945, 0.955, 0.953, null],
 
-          /* 2025 ---------------------------------------------------------- */
-          {
-            label: "2025",
-            color: BRAND_SECONDARY,
-            data: [0.945, 0.943, null, null, null, null],
-            datalabels: {
-              anchor: "end", // still attached to the point
-              align: "bottom", // but shown underneath
-            },
-          },
-        ],
-
-        /* y-axis formatting */
-        y: {
-          ticks: [0.9, 0.92, 0.94, 0.96, 0.98, 1.0],
-          fmt: (v) => "$" + v.toFixed(3),
-        },
+      /* flip the very first label ↓ */
+      datalabels: {
+        anchor: "end",
+        align: (ctx) => (ctx.dataIndex === 0 ? "bottom" : "top"), // 0.940 goes down
+        offset: 10,
       },
+    },
+
+    /* 2025 ---------------------------------------------------------- */
+    {
+      label: "2025",
+      color: BRAND_SECONDARY,
+      data: [0.945, 0.943, null, null, null, null],
+
+      /* flip the very first label ↑ */
+      datalabels: {
+        anchor: "end",
+        align: (ctx) => (ctx.dataIndex === 0 ? "top" : "bottom"), // 0.945 goes up
+        offset: 10,
+      },
+    },
+  ],
+
+  /* y-axis formatting */
+  y: {
+    ticks: [0.9, 0.92, 0.94, 0.96, 0.98, 1.0],
+    fmt: (v) => "$" + v.toFixed(3),
+  },
+},
       /* ─── 45X AMPC ($5-25 M) median price by vintage ─── */
       {
         title: "§45X AMPC ($5M–$25M) Median Gross Pricing by Vintage",
